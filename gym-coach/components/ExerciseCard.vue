@@ -2,13 +2,11 @@
   <NuxtLink 
     :to="`/exercise/${slug}`" 
     class="block bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:scale-[1.02] transition-all duration-300 transform"
-    @mouseenter="startAnimation"
-    @mouseleave="stopAnimation"
   >
     <div class="aspect-square relative bg-gray-100 p-4">
       <img 
         v-if="exercise.images && exercise.images.length"
-        :src="`/exercises/${currentImage}`" 
+        :src="`/exercises/${gifImage}`" 
         :alt="exercise.name" 
         loading="lazy"
         class="w-full h-full object-contain mix-blend-multiply"
@@ -31,38 +29,15 @@ const props = defineProps<{
   exercise: Partial<Exercise>
 }>()
 
-const currentImageIndex = ref(0)
-let animationInterval: ReturnType<typeof setInterval> | null = null
-
-const currentImage = computed(() => {
-  if (!props.exercise.images || !props.exercise.images.length) return ''
-  // If we are animating, we might need to handle the path differently if the images array has full paths
-  // The images array usually looks like ["Output/0.jpg", "Output/1.jpg"] or just ["0.jpg", "1.jpg"] inside the folder?
-  // Actually the data says: "images": ["Ab_Crunch_Machine/0.jpg", "Ab_Crunch_Machine/1.jpg"]
-  // So we just need to pick the index.
-  return props.exercise.images[currentImageIndex.value]
-})
-
-const startAnimation = () => {
-  if (!props.exercise.images || props.exercise.images.length <= 1) return
-  
-  stopAnimation()
-  
-  animationInterval = setInterval(() => {
-    currentImageIndex.value = (currentImageIndex.value + 1) % (props.exercise.images?.length || 1)
-  }, 700) // 700ms per frame for a steady pace
-}
-
-const stopAnimation = () => {
-  if (animationInterval) {
-    clearInterval(animationInterval)
-    animationInterval = null
+const gifImage = computed(() => {
+  if (!props.exercise.images || props.exercise.images.length === 0) return ''
+  const firstImage = props.exercise.images[0]
+  // Extract folder path and append animation.gif
+  const lastSlash = firstImage.lastIndexOf('/')
+  if (lastSlash === -1) {
+    return 'animation.gif' // Fallback if no folder structure
   }
-  currentImageIndex.value = 0
-}
-
-onUnmounted(() => {
-  stopAnimation()
+  return firstImage.substring(0, lastSlash + 1) + 'animation.gif'
 })
 
 const slug = computed(() => {

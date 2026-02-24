@@ -29,11 +29,13 @@ export default defineEventHandler(async (event) => {
         throw createError({ statusCode: 404, statusMessage: 'Exercise not found' })
     }
 
+    const exercise = found as Record<string, any>
+
     // Map snake_case → camelCase for the frontend
     return {
-        ...found,
-        primaryMuscles: found.primary_muscles ?? [],
-        secondaryMuscles: found.secondary_muscles ?? [],
+        ...exercise,
+        primaryMuscles: exercise.primary_muscles ?? [],
+        secondaryMuscles: exercise.secondary_muscles ?? [],
     }
 })
 

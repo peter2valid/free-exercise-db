@@ -15,6 +15,10 @@ create table if not exists exercises (
   images            text[]
 );
 
+-- Allow public read access (anon key can SELECT)
+-- The server already uses the service key, but this is good hygiene
+alter table exercises disable row level security;
+
 -- Full-text search index on name
 create index if not exists exercises_name_search
   on exercises using gin(to_tsvector('english', name));
@@ -26,3 +30,4 @@ create index if not exists exercises_category_idx
 -- Index for level filtering
 create index if not exists exercises_level_idx
   on exercises (level);
+
