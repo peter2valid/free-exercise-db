@@ -8,39 +8,16 @@ const { data: exercise, pending, error } = await useFetch<Exercise>(`/api/exerci
   key: `exercise-${slug}`
 })
 
-const currentImageIndex = ref(0)
-let animationInterval: ReturnType<typeof setInterval> | null = null
-
-const currentImage = computed(() => {
+const gifImage = computed(() => {
   if (!exercise.value || !exercise.value.images || !exercise.value.images.length) return ''
-  return exercise.value.images[currentImageIndex.value]
-})
-
-onMounted(() => {
-  startAnimation()
-})
-
-onUnmounted(() => {
-  stopAnimation()
-})
-
-const startAnimation = () => {
-  if (!exercise.value?.images || exercise.value.images.length <= 1) return
+  const firstImage = exercise.value.images[0]
   
-  stopAnimation()
+  const parts = firstImage.split('/')
+  if (parts.length < 2) return 'animation.gif'
   
-  animationInterval = setInterval(() => {
-    if (!exercise.value?.images) return
-    currentImageIndex.value = (currentImageIndex.value + 1) % exercise.value.images.length
-  }, 700)
-}
-
-const stopAnimation = () => {
-  if (animationInterval) {
-    clearInterval(animationInterval)
-    animationInterval = null
-  }
-}
+  const folder = parts[parts.length - 2]
+  return `/exercises/${folder}/animation.gif`
+})
 </script>
 
 <template>
@@ -63,7 +40,7 @@ const stopAnimation = () => {
 
       <div class="aspect-square bg-gray-100 relative">
         <img 
-          :src="`/exercises/${currentImage}`" 
+          :src="gifImage" 
           :alt="exercise.name"
           class="w-full h-full object-contain mix-blend-multiply"
         />
