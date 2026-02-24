@@ -6,7 +6,7 @@
     <div class="aspect-square relative bg-gray-100 p-4">
       <img 
         v-if="exercise.images && exercise.images.length"
-        :src="`/exercises/${gifImage}`" 
+        :src="`/${gifImage}`" 
         :alt="exercise.name" 
         loading="lazy"
         class="w-full h-full object-contain mix-blend-multiply"
