@@ -9,7 +9,7 @@
         :src="gifImage" 
         :alt="exercise.name" 
         loading="lazy"
-        class="w-full h-full object-contain mix-blend-multiply"
+        class="absolute inset-0 m-auto w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain mix-blend-multiply"
       />
       <div v-else class="w-full h-full flex items-center justify-center text-gray-400">
         No Image
