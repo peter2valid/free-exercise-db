@@ -6,7 +6,7 @@
     <div class="aspect-square relative bg-gray-100 p-4">
       <img 
         v-if="exercise.images && exercise.images.length"
-        :src="`/${gifImage}`" 
+        :src="gifImage" 
         :alt="exercise.name" 
         loading="lazy"
         class="w-full h-full object-contain mix-blend-multiply"
@@ -31,13 +31,15 @@ const props = defineProps<{
 
 const gifImage = computed(() => {
   if (!props.exercise.images || props.exercise.images.length === 0) return ''
-  const firstImage = props.exercise.images[0]
-  // Extract folder path and append animation.gif
-  const lastSlash = firstImage.lastIndexOf('/')
-  if (lastSlash === -1) {
-    return 'animation.gif' // Fallback if no folder structure
-  }
-  return firstImage.substring(0, lastSlash + 1) + 'animation.gif'
+  const firstImage = props.exercise.images[0] // e.g. "exercises/Ab_Crunch_Machine/0.jpg"
+  
+  // Extract just the folder name 
+  const parts = firstImage.split('/')
+  if (parts.length < 2) return 'animation.gif'
+  
+  // The folder name is the second to last part (e.g. Ab_Crunch_Machine)
+  const folder = parts[parts.length - 2]
+  return `/exercises/${folder}/animation.gif`
 })
 
 const slug = computed(() => {
